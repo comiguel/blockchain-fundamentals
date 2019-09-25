@@ -51,10 +51,10 @@ class Blockchain {
       lastBlock.hash
     );
     newBlock.mineBlock(this.difficulty);
-    this.addNewBlockToChain(newBlock);
+    this.validateAndAddNewBlock(newBlock);
   }
 
-  addNewBlockToChain(newBlock) {
+  validateAndAddNewBlock(newBlock) {
     const lastBlock = this.getLastBlock();
     if (lastBlock.index + 1 !== newBlock.index) {
       console.log('Indice no válido');
@@ -75,5 +75,15 @@ class Blockchain {
 const blockchain = new Blockchain();
 
 blockchain.createBlock({from: 'Juan', to: 'Camilo', amount: 10});
+
+const hackedBlock = new Block(
+  2,
+  new Date().getTime(),
+  {from: 'Camilo', to: 'Hacker', amount: 10},
+  blockchain.getLastBlock().chain
+);
+
+hackedBlock.hash = '00007840358437acc8a0f80d80870878a087e8d08f7c0780';
+blockchain.validateAndAddNewBlock(hackedBlock);
 
 blockchain.print();
